@@ -92,6 +92,11 @@ void Simulator::startFrame(double dt) {
     }
 }
 
+/**
+ * 模拟器的单步模拟。
+ * 
+ * @return 如果模拟应该继续，则为true；否则为false。
+ */
 bool Simulator::simulateStep() {
     if (getCurrentIteration() >= simulationSteps()) {
         auto s1 = std::chrono::steady_clock::now();

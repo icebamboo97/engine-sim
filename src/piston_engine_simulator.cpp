@@ -36,6 +36,13 @@ PistonEngineSimulator::~PistonEngineSimulator() {
     assert(m_antialiasingFilters == nullptr);
 }
 
+/**
+ * 加载模拟器，使用指定的引擎、车辆和传动装置。
+ * 
+ * @param engine 要加载到模拟器中的引擎对象。
+ * @param vehicle 要加载到模拟器中的车辆对象。
+ * @param transmission 要加载到模拟器中的传动装置对象。
+ */
 void PistonEngineSimulator::loadSimulation(Engine *engine, Vehicle *vehicle, Transmission *transmission) {
     Simulator::loadSimulation(engine, vehicle, transmission);
 
@@ -280,6 +287,13 @@ void PistonEngineSimulator::placeCylinder(int i) {
     piston->m_body.theta = bank->getAngle() + constants::pi;
 }
 
+/**
+ * 模拟活塞发动机的单个步骤。
+ * 此函数更新点火模块，如有必要点火燃烧室，
+ * 更新燃烧室，重置上一个时间步长的排气和进气流量，
+ * 并处理排气系统、进气和燃烧室流量的流体模拟。
+ * 最后，它重置点火模块中的点火事件。
+ */
 void PistonEngineSimulator::simulateStep_() {
     const double timestep = getTimestep();
     IgnitionModule *im = m_engine->getIgnitionModule();

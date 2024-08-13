@@ -34,6 +34,16 @@ OscilloscopeCluster::~OscilloscopeCluster() {
     /* void */
 }
 
+/**
+ * 初始化 OscilloscopeCluster。
+ * 
+ * 该函数通过为不同的测量设置各种作用域来初始化 OscilloscopeCluster。
+ * 它为每个作用域设置缓冲区大小、最小和最大值、线宽、颜色和其他属性。
+ * 这些作用域包括扭矩、功率、总排气流量、排气流量、进气流量、气缸分子、音频波形、气门升程作用域、气缸压力、压力体积和火花提前。
+ * 该函数还设置了当前焦点作用域和扭矩和功率的单位。
+ * 
+ * @param app 指向 EngineSimApplication 对象的指针。
+ */
 void OscilloscopeCluster::initialize(EngineSimApplication *app) {
     UiElement::initialize(app);
 
@@ -306,6 +316,14 @@ void OscilloscopeCluster::render() {
     UiElement::render();
 }
 
+/**
+ * @brief 采样示波器集群的数据。
+ * 
+ * 该函数采样与示波器集群相关的各种数据点。
+ * 它从模拟器中获取引擎对象并计算气缸压力。
+ * 如果当前迭代次数为偶数，则计算循环角度并将数据点添加到各个示波器中。
+ * 最后，根据采样的数据更新某些示波器的y轴和x轴限制。
+ */
 void OscilloscopeCluster::sample() {
     Engine *engine = m_simulator->getEngine();
     if (engine == nullptr) return;

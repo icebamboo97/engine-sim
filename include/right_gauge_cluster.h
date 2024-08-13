@@ -12,6 +12,16 @@
 #include "afr_cluster.h"
 #include "fuel_cluster.h"
 
+/**
+ * @class RightGaugeCluster
+ * @brief 表示右侧仪表盘的UI元素。
+ * 
+ * RightGaugeCluster类是UiElement的子类，提供了渲染和更新与引擎模拟相关的各种仪表和显示器的功能。它包括转速表、速度表、进气歧管真空表、进气流量表、容积效率表、燃油集群、油门显示器、AFR集群和燃烧室状态显示器。
+ * 
+ * RightGaugeCluster类还提供了设置引擎、设置单位和获取带单位的进气歧管压力的方法。它具有用于模拟目的的Simulator成员变量。
+ * 
+ * 受保护的成员包括渲染转速表和速度表的方法，以及用于获取RPM、红线、速度和进气歧管压力的私有成员。
+ */
 class RightGaugeCluster : public UiElement {
     public:
         RightGaugeCluster();

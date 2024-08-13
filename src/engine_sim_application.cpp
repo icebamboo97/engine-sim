@@ -88,6 +88,12 @@ EngineSimApplication::~EngineSimApplication() {
     /* void */
 }
 
+/**
+ * @brief 初始化引擎模拟应用程序。
+ * 
+ * @param instance 应用程序实例指针。
+ * @param api 设备API。
+ */
 void EngineSimApplication::initialize(void *instance, ysContextObject::DeviceAPI api) {
     dbasic::Path modulePath = dbasic::GetModulePath();
     dbasic::Path confPath = modulePath.Append("delta.conf");
@@ -199,6 +205,11 @@ void EngineSimApplication::initialize() {
 #endif /* ATG_ENGINE_SIM_DISCORD_ENABLED */
 }
 
+/**
+ * Process the engine simulation for a single frame.
+ * 
+ * @param frame_dt The time duration of the frame in seconds.
+ */
 void EngineSimApplication::process(float frame_dt) {
     frame_dt = static_cast<float>(clamp(frame_dt, 1 / 200.0f, 1 / 30.0f));
 
@@ -229,6 +240,7 @@ void EngineSimApplication::process(float frame_dt) {
         m_displayAngle = 0.0f;
     }
 
+    // Update the engine view
     m_simulator->setSimulationSpeed(speed);
 
     const double avgFramerate = clamp(m_engine.GetAverageFramerate(), 30.0f, 1000.0f);
@@ -433,7 +445,26 @@ void EngineSimApplication::destroy() {
     m_simulator->destroy();
     m_audioBuffer.destroy();
 }
-
+/**
+ * @brief 加载引擎、车辆和传动装置到EngineSimApplication。
+ * 
+ * 此函数销毁任何现有对象并释放先前的模拟器（如果存在）。
+ * 它还删除先前的车辆、传动装置和内燃机（如果存在）。
+ * 然后，将新的引擎、车辆和传动装置分配给相应的成员变量。
+ * 
+ * 函数使用引擎、车辆和传动装置创建模拟器。
+ * 如果引擎、车辆或传动装置中的任何一个为空指针，则将m_iceEngine设置为nullptr，将m_viewParameters.Layer1设置为0，并返回。
+ * 
+ * 函数使用引擎创建对象。
+ * 它将m_viewParameters.Layer1设置为引擎的最大深度，并计算引擎的位移。
+ * 
+ * 函数将模拟器的模拟频率设置为引擎的模拟频率。
+ * 使用引擎的初始抖动、噪声和高频增益设置模拟器的合成器的音频参数。
+ * 
+ * 对于引擎的每个排气系统，函数使用脉冲响应文件、音量和索引初始化模拟器的合成器的脉冲响应。
+ * 
+ * 最后，函数启动模拟器的音频渲染线程。
+ */
 void EngineSimApplication::loadEngine(
     Engine *engine,
     Vehicle *vehicle,
@@ -465,6 +496,7 @@ void EngineSimApplication::loadEngine(
     m_vehicle = vehicle;
     m_transmission = transmission;
 
+    // 创建引擎模拟器
     m_simulator = engine->createSimulator(vehicle, transmission);
 
     if (engine == nullptr || vehicle == nullptr || transmission == nullptr) {
@@ -505,7 +537,7 @@ void EngineSimApplication::loadEngine(
 
         waveFile.DestroyInternalBuffer();
     }
-
+    // 启动音频渲染线程
     m_simulator->startAudioRenderingThread();
 }
 
